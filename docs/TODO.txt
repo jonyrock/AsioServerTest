@@ -1,0 +1,14 @@
+TODAY
+=====
+
+TODO
+====
+* Add boost::asio
+* A simple http server with index page
+* File send form
+* Resources folder
+
+DONE
+====
+* Boost test
+
