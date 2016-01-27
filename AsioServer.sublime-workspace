@@ -227,23 +227,23 @@
 			"file": "CMakeLists.txt",
 			"settings":
 			{
-				"buffer_size": 335,
+				"buffer_size": 355,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "src/main.cpp",
+			"file": "docs/TODO.txt",
 			"settings":
 			{
-				"buffer_size": 93,
+				"buffer_size": 156,
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": ".gitignore",
+			"file": "src/server.hpp",
 			"settings":
 			{
-				"buffer_size": 5,
+				"buffer_size": 117,
 				"line_ending": "Unix"
 			}
 		}
@@ -363,10 +363,18 @@
 	},
 	"expanded_folders":
 	[
-		"/Users/alexeyvelikiy/Github/AsioServerTest"
+		"/Users/alexeyvelikiy/Github/AsioServerTest",
+		"/Users/alexeyvelikiy/Github/AsioServerTest/docs",
+		"/Users/alexeyvelikiy/Github/AsioServerTest/src"
 	],
 	"file_history":
 	[
+		"/Users/alexeyvelikiy/Github/AsioServerTest/src/main.cpp",
+		"/Users/alexeyvelikiy/Github/AsioServerTest/src/server.cpp",
+		"/Users/alexeyvelikiy/Github/AsioServerTest/.gitignore",
+		"/Users/alexeyvelikiy/Github/AsioServerTest/README.md",
+		"/Users/alexeyvelikiy/Github/AsioServerTest/docs/TODO.txt",
+		"/Users/alexeyvelikiy/Github/AsioServerTest/AsioServer.sublime-project",
 		"/Users/alexeyvelikiy/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings",
 		"/Users/alexeyvelikiy/Github/BidyFutur/server/public/css/style.css",
 		"/Users/alexeyvelikiy/Github/BidyFutur/docs/TODO.txt",
@@ -488,13 +496,7 @@
 		"/Users/alexeyvelikiy/.node-gyp/0.10.40/deps/v8/src/isolate.h",
 		"/Users/alexeyvelikiy/.node-gyp/0.10.40/deps/v8/src/v8threads.h",
 		"/Users/alexeyvelikiy/.node-gyp/0.10.40/deps/v8/src/platform.h",
-		"/Users/alexeyvelikiy/.node-gyp/0.10.40/deps/cares/config/freebsd/ares_config.h",
-		"/Users/alexeyvelikiy/Github/CorpGlory/Game/NodeWrapper/build/Makefile",
-		"/Users/alexeyvelikiy/Github/CorpGlory/Game/NodeWrapper/src/GameModule.cpp",
-		"/Users/alexeyvelikiy/Github/CorpGlory/Game/NodeWrapper/binding.gyp",
-		"/Users/alexeyvelikiy/Github/CorpGlory/Game/inc/Log.hpp",
-		"/Users/alexeyvelikiy/Github/CorpGlory/Game/CMakeLists.txt",
-		"/Users/alexeyvelikiy/Github/CorpGlory/Game/src/Main.cpp"
+		"/Users/alexeyvelikiy/.node-gyp/0.10.40/deps/cares/config/freebsd/ares_config.h"
 	],
 	"find":
 	{
@@ -524,6 +526,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"      \"",
 			"av@corpglory.com",
 			"clickOnRegion",
 			"regionClick",
@@ -669,15 +672,15 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 335,
+						"buffer_size": 355,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								289,
-								289
+								207,
+								207
 							]
 						],
 						"settings":
@@ -753,11 +756,104 @@
 				},
 				{
 					"buffer": 1,
-					"file": "src/main.cpp",
+					"file": "docs/TODO.txt",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 93,
+						"buffer_size": 156,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								96,
+								96
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content"
+							],
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 2,
+					"file": "src/server.hpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 117,
 						"regions":
 						{
 						},
@@ -835,93 +931,6 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": ".gitignore",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5,
-								5
-							]
-						],
-						"settings":
-						{
-							"BracketHighlighterBusy": false,
-							"bh_regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content"
-							],
-							"syntax": "Packages/Text/Plain text.tmLanguage"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
 					"stack_index": 2,
 					"type": "text"
 				}
@@ -945,11 +954,18 @@
 				0,
 				1,
 				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
 			]
 		],
 		"cols":
 		[
 			0.0,
+			0.5,
 			1.0
 		],
 		"rows":

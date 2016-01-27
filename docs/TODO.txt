@@ -1,15 +1,19 @@
 TODAY
 =====
+* A simple async http server with index page
 
 TODO
 ====
-* Add boost::asio
-* A simple http server with index page
 * File send form
 * Resources folder
+* Compute sha1 on stream
 
 DONE
 ====
 * Server class
 * Boost test
 
+LINKS
+=====
+* http://www.boost.org/doc/libs/1_52_0/doc/html/boost_asio/examples.html
+* http://stackoverflow.com/questions/2495994/can-sha-1-algorithm-be-computed-on-a-stream-with-low-memory-footprint
