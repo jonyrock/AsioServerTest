@@ -1,15 +1,16 @@
 TODAY
 =====
-* A simple async http server with index page
 
 TODO
 ====
+* Count bytes number by chunk in stream
 * File send form
 * Resources folder
 * Compute sha1 on stream
 
 DONE
 ====
+* One thread http server with index page
 * Server class
 * Boost test
 

@@ -3,13 +3,11 @@
 #include <iostream>
 #include <stdexcept>
 
-using namespace std;
-
 int main(int argc, char* argv[]) {
   try {
-    Server::Server server;
-    server.run();  
-  } catch (std::exception& e) {
-    std::cerr << "exception: " << e.what() << endl;
+    auto& server = Server::Server::getInstance();
+    server.run();
+  } catch (const std::exception& e) {
+    std::cerr << "exception: " << e.what() << std::endl;
   }
 }
