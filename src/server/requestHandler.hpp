@@ -21,8 +21,6 @@ public:
   void handleRequest(const Request& req, Reply& rep);
 
 private:
-  /// The directory containing the files to be served.
-  std::string m_docRoot;
 
   /// Perform URL-decoding on a string. Returns false if the encoding was
   /// invalid.

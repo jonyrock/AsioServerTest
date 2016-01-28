@@ -24,14 +24,15 @@ public:
   /// data is required. The InputIterator return value indicates 
   /// how much of the input has been consumed.
   template <typename InputIterator>
-  boost::tuple<boost::tribool, InputIterator> parse(Request& req,
-      InputIterator begin, InputIterator end)
-  {
-    while (begin != end)
-    {
+  boost::tuple<boost::tribool, InputIterator> parse(
+    Request& req,
+    InputIterator begin, InputIterator end
+  ) {
+    while (begin != end) {
       boost::tribool result = consume(req, *begin++);
-      if (result || !result)
+      if (result || !result) {
         return boost::make_tuple(result, begin);
+      }
     }
     boost::tribool result = boost::indeterminate;
     return boost::make_tuple(result, begin);
@@ -42,20 +43,19 @@ private:
   boost::tribool consume(Request& req, char input);
 
   /// Check if a byte is an HTTP character.
-  static bool is_char(int c);
+  static bool isChar(int c);
 
   /// Check if a byte is an HTTP control character.
-  static bool is_ctl(int c);
+  static bool isCtl(int c);
 
   /// Check if a byte is defined as an HTTP tspecial character.
-  static bool is_tspecial(int c);
+  static bool isTspecial(int c);
 
   /// Check if a byte is a digit.
-  static bool is_digit(int c);
+  static bool isDigit(int c);
 
   /// The current state of the parser.
-  enum state
-  {
+  enum state {
     method_start,
     method,
     uri,
@@ -76,7 +76,7 @@ private:
     header_value,
     expecting_newline_2,
     expecting_newline_3
-  } state_;
+  } m_state;
 };
 
 } // namespace server

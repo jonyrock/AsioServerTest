@@ -1,9 +1,7 @@
 
-#include "Reply.hpp"
+#include "reply.hpp"
 
 #include <boost/lexical_cast.hpp>
-
-#include <string>
 
 
 namespace Server {
@@ -97,7 +95,7 @@ std::vector<boost::asio::const_buffer> Reply::toBuffers() {
   std::vector<boost::asio::const_buffer> buffers;
   buffers.push_back(StatusStrings::toBuffer(status));
   for (std::size_t i = 0; i < headers.size(); ++i) {
-    header& h = headers[i];
+    Header& h = headers[i];
     buffers.push_back(boost::asio::buffer(h.name));
     buffers.push_back(
       boost::asio::buffer(MiscStrings::nameValueSeparator)

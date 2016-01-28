@@ -70,6 +70,7 @@ void Connection::handleRead(
         )
       );
     } else {
+      // TODO: case when it's a big post
       m_socket.async_read_some(
         boost::asio::buffer(m_buffer),
         boost::bind(

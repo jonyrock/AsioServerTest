@@ -1,8 +1,5 @@
 #include "connectionManager.hpp"
 
-#include <algorithm>
-#include <boost/bind.hpp>
-
 namespace Server {
 
 void ConnectionManager::start(ConnectionPtr c) {
@@ -17,10 +14,9 @@ void ConnectionManager::stop(ConnectionPtr c) {
 }
 
 void ConnectionManager::stopAll() {
-  std::for_each(
-    m_connections.begin(), m_connections.end(),
-    boost::bind(&Connection::stop, _1)
-  );
+  for(auto& c: m_connections) {
+    c->stop();
+  }
   m_connections.clear();
 }
 

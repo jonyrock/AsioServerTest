@@ -35,7 +35,7 @@ struct Reply
   } status;
 
   /// The headers to be included in the reply.
-  std::vector<header> headers;
+  std::vector<Header> headers;
 
   /// The content to be sent in the reply.
   std::string content;

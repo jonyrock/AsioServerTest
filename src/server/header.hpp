@@ -4,7 +4,7 @@
 
 namespace Server {
 
-struct header {
+struct Header {
   std::string name;
   std::string value;
 };

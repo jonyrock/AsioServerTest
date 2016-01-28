@@ -23,8 +23,10 @@ class Connection
 {
 public:
   /// Construct a connection with the given io_service.
-  explicit Connection(boost::asio::io_service& ioService,
-      ConnectionManager& manager, RequestHandler& handler);
+  explicit Connection(
+    boost::asio::io_service& ioService,
+    ConnectionManager& manager, RequestHandler& handler
+  );
 
   /// Get the socket associated with the connection.
   boost::asio::ip::tcp::socket& socket();
@@ -37,8 +39,10 @@ public:
 
 private:
   /// Handle completion of a read operation.
-  void handleRead(const boost::system::error_code& e,
-      std::size_t bytes_transferred);
+  void handleRead(
+    const boost::system::error_code& e,
+    std::size_t bytes_transferred
+  );
 
   /// Handle completion of a write operation.
   void handleWrite(const boost::system::error_code& e);
