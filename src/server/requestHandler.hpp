@@ -1,3 +1,5 @@
+//@formatter:off
+
 #pragma once
 
 
@@ -18,17 +20,16 @@ class RequestHandler
 {
 public:
   /// Construct with a directory containing files to be served.
-  explicit RequestHandler(const std::string& docRoot);
+  explicit RequestHandler();
 
   /// Handle a request and produce a reply.
-  void handleGetRequest(const Request &req, Reply &rep);
-
-  void handlePostSomeRequest(
-    const boost::array<char, 8192>& buffer,
-    std::size_t bytesTransferred
-  );
-
-  void handlePostEndRequest(Reply &rep);
+  void handleRequestGet(const Request& req, Reply& rep);
+  
+  void handleRequestPostBegin(const Request& req);
+  
+  void handleRequestPostSome(const Request& req);
+  
+  void handleRequestPostEnd(const Request& req, Reply& rep);
 
 private:
 

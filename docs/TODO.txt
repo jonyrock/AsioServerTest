@@ -1,15 +1,14 @@
 TODAY
 =====
+* Compute sha1 on stream
 
 TODO
 ====
 * Count bytes number by chunk in stream
-* File send form
-* Resources folder
-* Compute sha1 on stream
 
 DONE
 ====
+* File send form
 * One thread http server with index page
 * Server class
 * Boost test
@@ -18,3 +17,4 @@ LINKS
 =====
 * http://www.boost.org/doc/libs/1_52_0/doc/html/boost_asio/examples.html
 * http://stackoverflow.com/questions/2495994/can-sha-1-algorithm-be-computed-on-a-stream-with-low-memory-footprint
+* https://www.w3.org/Protocols/rfc1341/7_2_Multipart.html

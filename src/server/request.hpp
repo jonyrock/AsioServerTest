@@ -15,6 +15,13 @@ struct Request {
   int httpVersionMajor;
   int httpVersionMinor;
   std::vector<Header> headers;
+  
+  bool headerIsReady = false;
+  
+  std::string boundary;
+  // correspond to ConnectionManager::m_buffer
+  char postChunk[8192];
+  size_t postChunkSize = 0;
 };
 
 } // namespace Server

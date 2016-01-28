@@ -1,7 +1,10 @@
+//@formatter:off
+
 #pragma once
 
 #include <boost/logic/tribool.hpp>
 #include <boost/tuple/tuple.hpp>
+#include <queue>
 
 
 namespace Server {
@@ -54,6 +57,12 @@ private:
   /// Check if a byte is a digit.
   static bool isDigit(int c);
 
+  static void findBoundary(Request& req);
+  
+  bool isPostDataBufferIsEnd(Request& req) const;
+  
+  std::deque<char> m_postDataBuffer;
+
   /// The current state of the parser.
   enum state {
     method_start,
@@ -75,7 +84,13 @@ private:
     space_before_header_value,
     header_value,
     expecting_newline_2,
-    expecting_newline_3
+    expecting_newline_3,
+    postData_boundary,
+    postData_headerLine1,
+    postData_headerLine2,
+    postData_headerEmptyLineR,
+    postData_headerEmptyLineN,
+    postData_rawData
   } m_state;
 };
 

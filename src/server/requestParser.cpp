@@ -1,3 +1,4 @@
+//@formatter:off
 
 #include "requestParser.hpp"
 #include "request.hpp"
@@ -10,15 +11,13 @@ RequestParser::RequestParser()
 {
 }
 
-void RequestParser::reset()
-{
+void RequestParser::reset() {
   m_state = method_start;
 }
 
-boost::tribool RequestParser::consume(Request& req, char input)
-{
-  switch (m_state)
-  {
+boost::tribool RequestParser::consume(Request& req, char input) {
+  switch (m_state) {
+
   case method_start:
     if (!isChar(input) || isCtl(input) || isTspecial(input)) {
       return false;
@@ -27,6 +26,7 @@ boost::tribool RequestParser::consume(Request& req, char input)
       req.method.push_back(input);
       return boost::indeterminate;
     }
+
   case method:
     if (input == ' ') {
       m_state = uri;
@@ -40,14 +40,13 @@ boost::tribool RequestParser::consume(Request& req, char input)
       req.method.push_back(input);
       return boost::indeterminate;
     }
+      
   case uri:
     if (input == ' ')
     {
       m_state = http_version_h;
       return boost::indeterminate;
-    }
-    else if (isCtl(input))
-    {
+    } else if (isCtl(input)) {
       return false;
     }
     else
@@ -55,6 +54,7 @@ boost::tribool RequestParser::consume(Request& req, char input)
       req.uri.push_back(input);
       return boost::indeterminate;
     }
+
   case http_version_h:
     if (input == 'H')
     {
@@ -90,32 +90,24 @@ boost::tribool RequestParser::consume(Request& req, char input)
     {
       m_state = http_version_slash;
       return boost::indeterminate;
-    }
-    else
-    {
+    } else {
       return false;
     }
   case http_version_slash:
-    if (input == '/')
-    {
+    if (input == '/')  {
       req.httpVersionMajor = 0;
       req.httpVersionMinor = 0;
       m_state = http_version_major_start;
       return boost::indeterminate;
-    }
-    else
-    {
+    } else {
       return false;
     }
   case http_version_major_start:
-    if (isDigit(input))
-    {
+    if (isDigit(input)) {
       req.httpVersionMajor = req.httpVersionMajor * 10 + input - '0';
       m_state = http_version_major;
       return boost::indeterminate;
-    }
-    else
-    {
+    } else {
       return false;
     }
   case http_version_major:
@@ -192,21 +184,14 @@ boost::tribool RequestParser::consume(Request& req, char input)
       return boost::indeterminate;
     }
   case header_lws:
-    if (input == '\r')
-    {
+    if (input == '\r') {
       m_state = expecting_newline_2;
       return boost::indeterminate;
-    }
-    else if (input == ' ' || input == '\t')
-    {
+    } else if (input == ' ' || input == '\t') {
       return boost::indeterminate;
-    }
-    else if (isCtl(input))
-    {
+    } else if (isCtl(input)) {
       return false;
-    }
-    else
-    {
+    } else {
       m_state = header_value;
       req.headers.back().value.push_back(input);
       return boost::indeterminate;
@@ -261,27 +246,118 @@ boost::tribool RequestParser::consume(Request& req, char input)
     {
       return false;
     }
-  case expecting_newline_3:
-    return (input == '\n');
+  case expecting_newline_3: {
+    if(input == '\n') {
+      req.headerIsReady = true; 
+      if(req.method == "POST") {
+        // gonna read by chunk the rest
+        findBoundary(req);
+        if(req.boundary == "") {
+          return false;
+        } else {
+          m_state = postData_boundary;
+          return boost::indeterminate;
+        }
+      } else {
+        // GET, PUT, etc..
+        return true;
+      }
+    } else {
+      return false;
+    }
+  }
+    
+  case postData_boundary: {
+    if(input == '\r') {
+      m_state = postData_headerLine1;
+    }
+    return boost::indeterminate;
+  }
+  case postData_headerLine1: {
+    if(input == '\r') {
+      m_state = postData_headerLine2;
+    }
+    return boost::indeterminate;
+  }
+  case postData_headerLine2: {
+    if(input == '\r') {
+      m_state = postData_headerEmptyLineR;
+    }
+    return boost::indeterminate;
+  }
+  case postData_headerEmptyLineR: {
+    if(input == '\r') {
+      m_state = postData_headerEmptyLineN;
+    }
+    return boost::indeterminate;
+  }
+  case postData_headerEmptyLineN: {
+    if(input == '\n') {
+      m_state = postData_rawData;
+    }
+    return boost::indeterminate;
+  }
+  case postData_rawData: { 
+    if(m_postDataBuffer.size() == req.boundary.length() + 6) {
+      char topChar = m_postDataBuffer.front();
+      m_postDataBuffer.pop_front();
+      m_postDataBuffer.push_back(input);
+      req.postChunk[req.postChunkSize] = topChar;
+      req.postChunkSize++;
+      if(isPostDataBufferIsEnd(req)) {
+        return true;
+      }
+    } else {
+      m_postDataBuffer.push_back(input);
+    }
+    return boost::indeterminate;
+  }
   default:
     return false;
   }
 }
 
-bool RequestParser::isChar(int c)
-{
+bool RequestParser::isPostDataBufferIsEnd(Request& req) const {
+  if(m_postDataBuffer.size() < req.boundary.size() + 6) {
+    return false;
+  }
+  if(m_postDataBuffer.at(0) != '\r') {
+    return false;
+  }
+  if(m_postDataBuffer.at(1) != '\n') {
+    return false;
+  }
+  if(m_postDataBuffer.at(2) != '-') {
+    return false;
+  }
+  if(m_postDataBuffer.at(3) != '-') {
+    return false;
+  }
+  if(m_postDataBuffer.at(m_postDataBuffer.size() - 2) != '-') {
+    return false;
+  }
+  if(m_postDataBuffer.at(m_postDataBuffer.size() - 1) != '-') {
+    return false;
+  }
+  
+  for(size_t i = 0; i < req.boundary.size(); i++) {
+    if(m_postDataBuffer.at(i + 4) != req.boundary.at(i)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+bool RequestParser::isChar(int c) {
   return c >= 0 && c <= 127;
 }
 
-bool RequestParser::isCtl(int c)
-{
+bool RequestParser::isCtl(int c) {
   return (c >= 0 && c <= 31) || (c == 127);
 }
 
-bool RequestParser::isTspecial(int c)
-{
-  switch (c)
-  {
+bool RequestParser::isTspecial(int c) {
+  switch (c) {
   case '(': case ')': case '<': case '>': case '@':
   case ',': case ';': case ':': case '\\': case '"':
   case '/': case '[': case ']': case '?': case '=':
@@ -292,9 +368,24 @@ bool RequestParser::isTspecial(int c)
   }
 }
 
-bool RequestParser::isDigit(int c)
-{
+bool RequestParser::isDigit(int c) {
   return c >= '0' && c <= '9';
+}
+
+void RequestParser::findBoundary(Request& req) {
+  static const std::string boundrary_str("boundary=");
+  for(auto& h: req.headers) {
+    if(h.name != "Content-Type") {
+      continue;
+    }
+    auto bPos = h.value.find(boundrary_str);
+    if(bPos == h.value.npos) {
+      return;
+    }
+    bPos += boundrary_str.length();
+    auto res = h.value.substr(bPos, h.value.length() - bPos);
+    req.boundary = h.value.substr(bPos, h.value.length() - bPos);
+  }
 }
 
 } // namespace Server

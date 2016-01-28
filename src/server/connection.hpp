@@ -37,6 +37,7 @@ public:
   /// Stop all asynchronous operations associated with the connection.
   void stop();
 
+
 private:
 
   void handleReadEnd();
@@ -49,6 +50,8 @@ private:
 
   /// Handle completion of a write operation.
   void handleWrite(const boost::system::error_code& e);
+
+  void sendBad();
 
   /// Socket for the connection.
   boost::asio::ip::tcp::socket m_socket;
@@ -70,6 +73,8 @@ private:
 
   /// The reply to be sent back to the client.
   Reply m_reply;
+
+
 };
 
 typedef boost::shared_ptr<Connection> ConnectionPtr;

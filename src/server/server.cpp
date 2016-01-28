@@ -34,7 +34,7 @@ struct ServerImpl : public Server {
     m_acceptor(m_ioService),
     m_connectionManager(),
     m_newConnection(),
-    m_requestHandler(".")
+    m_requestHandler()
   {
     m_signals.add(SIGINT);
     m_signals.add(SIGTERM);

@@ -1,22 +1,23 @@
+//@formatter:off
+
 #include "requestHandler.hpp"
-#include "mimeTypes.hpp"
+
 #include "reply.hpp"
 #include "request.hpp"
 
 #include <boost/lexical_cast.hpp>
 
 #include <fstream>
-#include <sstream>
-#include <string>
 #include <iostream>
 
 
 namespace Server {
-  
 
-RequestHandler::RequestHandler(const std::string& docRoot) { }
 
-void RequestHandler::handleGetRequest(const Request &req, Reply &rep) {
+RequestHandler::RequestHandler() { }
+
+
+void RequestHandler::handleRequestGet(const Request& req, Reply& rep) {
    
   // Decode url to path.
   std::string requestPath;
@@ -24,12 +25,13 @@ void RequestHandler::handleGetRequest(const Request &req, Reply &rep) {
     rep = Reply::stockReply(Reply::BadRequest);
     return;
   }
+  // TODO: return 404 if path != '/'
 
   // Fill out the reply to be sent to the client.
   rep.status = Reply::Ok;
   
   rep.content = "<h1>Upload file</h1>"
-                "<form method=\"post\">\n"
+                "<form method=\"post\" enctype=\"multipart/form-data\">\n"
                 "  <input type=\"file\" name=\"formFile\" >\n"
                 "  <input type=\"submit\">\n"
                 "</form>";
@@ -43,27 +45,25 @@ void RequestHandler::handleGetRequest(const Request &req, Reply &rep) {
   rep.headers[1].value = "text/html";
 }
 
-void RequestHandler::handlePostSomeRequest(
-  const boost::array<char, 8192> &buffer, std::size_t bytesTransferred
-) {
-
+void RequestHandler::handleRequestPostBegin(const Request& req) {
+  // prepare for handleRequestPostSome
 }
 
-void RequestHandler::handlePostEndRequest(Reply &rep) {
+void RequestHandler::handleRequestPostSome(const Request& req) {
+  // TODO: compute SHA1
+}
 
-  // Fill out the reply to be sent to the client.
+void RequestHandler::handleRequestPostEnd(const Request& req, Reply& rep) {
+  // TODO: return SHA1 result
   rep.status = Reply::Ok;
-
   rep.content = "42";
-
   rep.headers.resize(2);
   rep.headers[0].name = "Content-Length";
   rep.headers[0].value = boost::lexical_cast<std::string>(
-          rep.content.size()
+    rep.content.size()
   );
   rep.headers[1].name = "Content-Type";
   rep.headers[1].value = "text/plain";
-
 }
 
 bool RequestHandler::urlDecode(const std::string& in, std::string& out) {
