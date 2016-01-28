@@ -1,6 +1,6 @@
 TODAY
 =====
-* Compute sha1 on stream
+* Compute Sha1Builder on stream
 
 TODO
 ====
@@ -18,3 +18,4 @@ LINKS
 * http://www.boost.org/doc/libs/1_52_0/doc/html/boost_asio/examples.html
 * http://stackoverflow.com/questions/2495994/can-sha-1-algorithm-be-computed-on-a-stream-with-low-memory-footprint
 * https://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
+* http://www.movable-type.co.uk/scripts/sha1.html

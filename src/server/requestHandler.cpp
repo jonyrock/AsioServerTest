@@ -50,7 +50,9 @@ void RequestHandler::handleRequestPostBegin(const Request& req) {
 }
 
 void RequestHandler::handleRequestPostSome(const Request& req) {
-  // TODO: compute SHA1
+  for(size_t i = 0; i < req.postChunkSize; i++) {
+    std::cout << req.postChunk[i] << std::flush;
+  }
 }
 
 void RequestHandler::handleRequestPostEnd(const Request& req, Reply& rep) {

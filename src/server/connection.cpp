@@ -78,11 +78,6 @@ void Connection::handleRead(
   
   if (!e) {
     boost::tribool result;
-
-    for(size_t i = 0; i < bytesTransferred; i++) {
-      std::cout << m_buffer[i] << std::flush;
-    }
-
     boost::tie(result, boost::tuples::ignore) = m_requestParser.parse(
       m_request,
       m_buffer.data(),

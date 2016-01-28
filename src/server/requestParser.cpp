@@ -297,8 +297,8 @@ boost::tribool RequestParser::consume(Request& req, char input) {
     }
     return boost::indeterminate;
   }
-  case postData_rawData: { 
-    if(m_postDataBuffer.size() == req.boundary.length() + 6) {
+  case postData_rawData: {
+    if(m_postDataBuffer.size() == req.boundary.length()) {
       char topChar = m_postDataBuffer.front();
       m_postDataBuffer.pop_front();
       m_postDataBuffer.push_back(input);
@@ -318,30 +318,11 @@ boost::tribool RequestParser::consume(Request& req, char input) {
 }
 
 bool RequestParser::isPostDataBufferIsEnd(Request& req) const {
-  if(m_postDataBuffer.size() < req.boundary.size() + 6) {
+  if(m_postDataBuffer.size() < req.boundary.size()) {
     return false;
   }
-  if(m_postDataBuffer.at(0) != '\r') {
-    return false;
-  }
-  if(m_postDataBuffer.at(1) != '\n') {
-    return false;
-  }
-  if(m_postDataBuffer.at(2) != '-') {
-    return false;
-  }
-  if(m_postDataBuffer.at(3) != '-') {
-    return false;
-  }
-  if(m_postDataBuffer.at(m_postDataBuffer.size() - 2) != '-') {
-    return false;
-  }
-  if(m_postDataBuffer.at(m_postDataBuffer.size() - 1) != '-') {
-    return false;
-  }
-  
   for(size_t i = 0; i < req.boundary.size(); i++) {
-    if(m_postDataBuffer.at(i + 4) != req.boundary.at(i)) {
+    if(m_postDataBuffer.at(i) != req.boundary.at(i)) {
       return false;
     }
   }
@@ -384,7 +365,7 @@ void RequestParser::findBoundary(Request& req) {
     }
     bPos += boundrary_str.length();
     auto res = h.value.substr(bPos, h.value.length() - bPos);
-    req.boundary = h.value.substr(bPos, h.value.length() - bPos);
+    req.boundary = "\r\n--" + h.value.substr(bPos, h.value.length() - bPos) + "--";
   }
 }
 
