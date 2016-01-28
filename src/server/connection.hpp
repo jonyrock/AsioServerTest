@@ -38,6 +38,9 @@ public:
   void stop();
 
 private:
+
+  void handleReadEnd();
+
   /// Handle completion of a read operation.
   void handleRead(
     const boost::system::error_code& e,

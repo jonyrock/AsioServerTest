@@ -38,6 +38,25 @@ void Connection::stop() {
   m_socket.close();
 }
 
+void Connection::handleReadEnd() {
+  if(m_request.method == "GET") {
+    m_requestHandler.handleGetRequest(m_request, m_reply);
+  }
+
+  if(m_request.method == "POST") {
+    m_requestHandler.handlePostEndRequest(m_reply);
+  }
+
+  boost::asio::async_write(
+    m_socket, m_reply.toBuffers(),
+    boost::bind(
+      &Connection::handleWrite, shared_from_this(),
+      boost::asio::placeholders::error
+    )
+  );
+
+}
+
 void Connection::handleRead(
   const boost::system::error_code& e,
   std::size_t bytesTransferred
@@ -46,20 +65,14 @@ void Connection::handleRead(
   // TODO: compute online function here (SHA1)
   if (!e) {
     boost::tribool result;
-    boost::tie(result, boost::tuples::ignore) = 
-      m_requestParser.parse(
-        m_request, m_buffer.data(), m_buffer.data() + bytesTransferred
+    boost::tie(result, boost::tuples::ignore) = m_requestParser.parse(
+        m_request,
+        m_buffer.data(),
+        m_buffer.data() + bytesTransferred
       );
 
     if (result) {
-      m_requestHandler.handleRequest(m_request, m_reply);
-      boost::asio::async_write(
-        m_socket, m_reply.toBuffers(),
-        boost::bind(
-          &Connection::handleWrite, shared_from_this(),
-          boost::asio::placeholders::error
-        )
-      );
+      handleReadEnd();
     } else if (!result) {
       m_reply = Reply::stockReply(Reply::BadRequest);
       boost::asio::async_write(

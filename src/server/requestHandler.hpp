@@ -1,8 +1,11 @@
 #pragma once
 
 
-#include <string>
 #include <boost/noncopyable.hpp>
+#include <boost/array.hpp>
+
+#include <string>
+
 
 namespace Server {
 
@@ -18,7 +21,14 @@ public:
   explicit RequestHandler(const std::string& docRoot);
 
   /// Handle a request and produce a reply.
-  void handleRequest(const Request& req, Reply& rep);
+  void handleGetRequest(const Request &req, Reply &rep);
+
+  void handlePostSomeRequest(
+    const boost::array<char, 8192>& buffer,
+    std::size_t bytesTransferred
+  );
+
+  void handlePostEndRequest(Reply &rep);
 
 private:
 

@@ -16,7 +16,7 @@ namespace Server {
 
 RequestHandler::RequestHandler(const std::string& docRoot) { }
 
-void RequestHandler::handleRequest(const Request& req, Reply& rep) {
+void RequestHandler::handleGetRequest(const Request &req, Reply &rep) {
    
   // Decode url to path.
   std::string requestPath;
@@ -24,13 +24,15 @@ void RequestHandler::handleRequest(const Request& req, Reply& rep) {
     rep = Reply::stockReply(Reply::BadRequest);
     return;
   }
-  
-  std::cout << "requestPath: " << requestPath << std::endl;
 
   // Fill out the reply to be sent to the client.
   rep.status = Reply::Ok;
   
-  rep.content = "<h1>Hi, bro!</h1>";
+  rep.content = "<h1>Upload file</h1>"
+                "<form method=\"post\">\n"
+                "  <input type=\"file\" name=\"formFile\" >\n"
+                "  <input type=\"submit\">\n"
+                "</form>";
   
   rep.headers.resize(2);
   rep.headers[0].name = "Content-Length";
@@ -39,6 +41,29 @@ void RequestHandler::handleRequest(const Request& req, Reply& rep) {
                          );
   rep.headers[1].name = "Content-Type";
   rep.headers[1].value = "text/html";
+}
+
+void RequestHandler::handlePostSomeRequest(
+  const boost::array<char, 8192> &buffer, std::size_t bytesTransferred
+) {
+
+}
+
+void RequestHandler::handlePostEndRequest(Reply &rep) {
+
+  // Fill out the reply to be sent to the client.
+  rep.status = Reply::Ok;
+
+  rep.content = "42";
+
+  rep.headers.resize(2);
+  rep.headers[0].name = "Content-Length";
+  rep.headers[0].value = boost::lexical_cast<std::string>(
+          rep.content.size()
+  );
+  rep.headers[1].name = "Content-Type";
+  rep.headers[1].value = "text/plain";
+
 }
 
 bool RequestHandler::urlDecode(const std::string& in, std::string& out) {
