@@ -21,38 +21,44 @@ struct ternary_operator {
 }
 
 class Sha1Builder {
-  static const size_t hash_size = 5;
-  static const size_t min_pad = 64;
-  static const size_t block_bits = 512;
-  static const size_t block_bytes = block_bits / 8;
-  static const size_t block_words = block_bytes / 4;
+  static const size_t HASH_SIZE = 5;
+  static const size_t MIN_PAD = 64;
+  static const size_t BLOCK_BITS = 512;
+  static const size_t BLOCK_BYTES = BLOCK_BITS / 8;
+  static const size_t BLOCK_WORDS = BLOCK_BYTES / 4;
 
   std::vector<uint32_t> K;
   std::vector<uint32_t> H;
   std::vector<uint32_t> W;
   std::vector<ternary_operator *> fs;
   uint32_t a, b, c, d, e, T;
-  static const size_t block_size = 16;
+  static const size_t blockSize = 16;
   static const size_t bytes_per_word = 4;
-  size_t total_size;
+  size_t totalSize;
 
   // hash a 512-bit block of input.
   //
-  void hash_block(std::vector<uint32_t> const &block);
+  void hashBlock(std::vector<uint32_t> const &block);
 
   // Pad the input to a multiple of 512 bits, and add the length
   // in binary to the end.
-  static std::string pad(std::string const &input, size_t size);
+  static std::string pad();
 
   // Turn 64 bytes into a block of 16 uint32_t's.
-  std::vector<uint32_t> make_block(std::string const &in);
+  std::vector<uint32_t> makeBlock(std::string const &in);
+  
+  size_t m_inputSize = 0;
+  std::string m_appendReminder;
 
 public:
 
+  static std::string toHexStr(uint32_t);
   
   Sha1Builder();
   void append(const std::string& str);
+  void end();
   std::vector<uint32_t> value() const;
+  std::string toString() const;
 
 };
 }

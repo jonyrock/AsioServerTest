@@ -12,22 +12,11 @@ using namespace std;
 int main(int argc, char* argv[]) {
   try {
 
-//    crypto::Sha1Builder hasher;
-//    hasher.append("ololo");
-//    std::vector<uint32_t> h = hasher.value(); 
-//    for(auto i: h) {
-//      std::cout << i << std::endl;
-//    }
-////    
-////
-////    sprintf(textToWrite,"%lu", h[0]);
-////    
-////    cout << textToWrite[0];
-////    cout << textToWrite[1];
-////    cout << textToWrite[2];
-////    cout << textToWrite[3];
-//
-//
+    crypto::Sha1Builder hasher;
+    hasher.append("ololoololoololoololoololoololoololoololoololoololoololoololoololoololoololoololoololoololoololoololoololoololoololoololoololoololoololoololoololoololo");
+    hasher.end();
+    cout << hasher.toString()  << endl;
+
 //    std::uint32_t value(3033586844);
 //    std::bitset<32> bits(value);
 //    std::cout << bits.to_string() << std::endl;
@@ -39,8 +28,8 @@ int main(int argc, char* argv[]) {
 //    
 //    return 0;
 
-    auto& server = Server::Server::getInstance();
-    server.run();
+//    auto& server = Server::Server::getInstance();
+//    server.run();
   } catch (const std::exception& e) {
     std::cerr << "exception: " << e.what() << std::endl;
   }

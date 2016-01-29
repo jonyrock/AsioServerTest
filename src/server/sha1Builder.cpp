@@ -1,10 +1,12 @@
 #include "sha1Builder.hpp"
-// Please see comments in sha.h for licensing information, etc.
-//
 
-// Many people don't like the names I usually use for namespaces, so I've kept this one
-// short and simple.
-//
+#include <sstream>
+#include <boost/algorithm/hex.hpp>
+#include <iterator>
+#include <boost/lexical_cast.hpp>
+#include <boost/format.hpp> 
+
+
 namespace crypto {
 namespace {
 uint32_t ROTL(uint32_t const &value, unsigned bits) {
@@ -42,8 +44,8 @@ uint32_t word(int a, int b, int c, int d) {
 
 // hash a 512-bit block of input.
 //
-void Sha1Builder::hash_block(std::vector<uint32_t> const &block) {
-  assert(block.size() == block_words);
+void Sha1Builder::hashBlock(std::vector<uint32_t> const &block) {
+  assert(block.size() == BLOCK_WORDS);
 
   int t;
   std::copy(block.begin(), block.end(), W.begin());
@@ -64,36 +66,14 @@ void Sha1Builder::hash_block(std::vector<uint32_t> const &block) {
   H[0] += a; H[1] += b; H[2] += c; H[3] += d; H[4] += e;
 }
 
-// Pad the input to a multiple of 512 bits, and put the length
-// in binary at the end. 
-std::string Sha1Builder::pad(std::string const &input, size_t size) {
-  size_t length = size * 8 + 1;
-  size_t remainder = length % block_bits;
-  size_t pad_len = block_bits-remainder;
-
-  if (pad_len < min_pad)
-    pad_len += block_bits;
-  ++pad_len;
-
-  pad_len &= ~7;
-  std::string padding(pad_len/8, '\0');
-
-  for (size_t i=0; i<sizeof(padding.size()); i++) {
-    padding[padding.size() - i - 1] = (length - 1) >> (i * 8) & 0xff;
-  }
-  padding[0] |= (unsigned char)0x80;
-
-  std::string ret(input+padding);
-  return ret;
-}
 
 // Turn 64 bytes into a block of 16 uint32_t's.
-std::vector<uint32_t> Sha1Builder::make_block(std::string const &in) {
-  assert(in.size() >= block_bytes);
+std::vector<uint32_t> Sha1Builder::makeBlock(std::string const &in) {
+  assert(in.size() >= BLOCK_BYTES);
 
-  std::vector<uint32_t> ret(block_words);
+  std::vector<uint32_t> ret(BLOCK_WORDS);
 
-  for (size_t i=0; i<block_words; i++) {
+  for (size_t i=0; i< BLOCK_WORDS; i++) {
     size_t s = i*4;
     ret[i] = word(in[s], in[s+1], in[s+2], in[s+3]);
   }
@@ -104,7 +84,7 @@ std::vector<uint32_t> Sha1Builder::make_block(std::string const &in) {
 // Construct a SHA-1 object. More expensive that typical 
 // ctor, but not expected to be copied a lot or anything
 // like that, so it should be fairly harmless.
-Sha1Builder::Sha1Builder() : K(80), H(5), W(80), fs(80), total_size(0) {
+Sha1Builder::Sha1Builder() : K(80), H(5), W(80), fs(80) {
   static const uint32_t H0[] = {
     0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476, 0xc3d2e1f0
   };
@@ -112,7 +92,7 @@ Sha1Builder::Sha1Builder() : K(80), H(5), W(80), fs(80), total_size(0) {
     0x5a827999, 0x6ed9eba1, 0x8f1bbcdc, 0xca62c1d6
   };
 
-  std::copy(H0, H0+hash_size, H.begin());
+  std::copy(H0, H0+ HASH_SIZE, H.begin());
 
   std::fill_n(K.begin()+00, 20, Ks[0]);
   std::fill_n(K.begin()+20, 20, Ks[1]);
@@ -131,24 +111,75 @@ Sha1Builder::Sha1Builder() : K(80), H(5), W(80), fs(80), total_size(0) {
 
 
 void Sha1Builder::append(const std::string& input) {
-  std::string temp(pad(input, total_size + input.size()));
-  std::vector<uint32_t> block(block_size);
 
-  size_t num = temp.size() / block_bytes;
+  m_inputSize += input.size();
+  
+  std::string temp = m_appendReminder + input;
 
-  for (unsigned block_num = 0; block_num < num; block_num++) {
+  std::vector<uint32_t> block(blockSize);
+
+  size_t num = temp.size() / BLOCK_BYTES;
+
+  for (unsigned blockNum = 0; blockNum < num; blockNum++) {
     size_t s;
-    for (size_t i = 0; i < block_size; i++) {
-      s = block_num * block_bytes + i * 4;
+    for (size_t i = 0; i < blockSize; i++) {
+      s = blockNum * BLOCK_BYTES + i * 4;
       block[i] = word(temp[s], temp[s + 1], temp[s + 2], temp[s + 3]);
     }
-    hash_block(block);
+    hashBlock(block);
   }
+  
+  size_t reminderLength = temp.size() % BLOCK_BYTES;
+  m_appendReminder = temp.substr(temp.length() - reminderLength, reminderLength);
 
 }
 
-std::vector<uint32_t> Sha1Builder::value() const { 
+void Sha1Builder::end() {
+
+  // pad
+  size_t length = m_inputSize * 8 + 1;
+  size_t remainder = length % BLOCK_BITS;
+  size_t padLen = BLOCK_BITS - remainder;
+
+  if (padLen < MIN_PAD) {
+    padLen += BLOCK_BITS;
+  }
+  padLen++;
+
+  padLen &= ~7;
+  std::string padding(padLen / 8, '\0');
+
+  for (size_t i = 0; i < sizeof(padding.size()); i++) {
+    padding[padding.size() - i - 1] = (length - 1) >> (i * 8) & 0xff;
+  }
+  padding[0] |= (unsigned char)0x80;
+
+  m_appendReminder += padding;
+  
+  // small hack: add empty string to the updated reminder string
+  append("");
+  
+}
+
+std::vector<uint32_t> Sha1Builder::value() const {
   return H;
+}
+
+std::string Sha1Builder::toHexStr(uint32_t n) {
+  std::string res;
+  for (char i = 7; i >= 0; i--) {
+    int v = boost::lexical_cast<int>(n >> (i * 4) & 0xf);
+    res += boost::str(boost::format("%x") % v);
+  }
+  return res;
+}
+
+std::string Sha1Builder::toString() const {
+  std::stringstream res;
+  for(auto& h: H) {
+    res << toHexStr(h);
+  }
+  return res.str();
 }
 
 

@@ -19,3 +19,4 @@ LINKS
 * http://stackoverflow.com/questions/2495994/can-sha-1-algorithm-be-computed-on-a-stream-with-low-memory-footprint
 * https://www.w3.org/Protocols/rfc1341/7_2_Multipart.html
 * http://www.movable-type.co.uk/scripts/sha1.html
+* http://onlinemd5.com/

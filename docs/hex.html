@@ -1,0 +1,27 @@
+ 
+ <html>
+ 
+ <head>
+ <script type="text/javascript">
+   function toHexStr (n) {
+      var s = "", v;
+      for (var i = 7; i >= 0; i--) { 
+          v = (n >>> (i * 4)) & 0xf;
+          s += v.toString(16);
+      }
+      return s;
+  };
+  
+  console.log(toHexStr(3033586844));
+  
+</script>
+
+</head>
+
+<body>
+  
+  
+</body>
+
+
+</html>
