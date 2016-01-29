@@ -1,32 +1,32 @@
 #include "sha1Builder.hpp"
 
-#include <sstream>
 #include <boost/algorithm/hex.hpp>
-#include <iterator>
 #include <boost/lexical_cast.hpp>
-#include <boost/format.hpp> 
+#include <boost/format.hpp>
+
+#include <sstream>
 
 
-namespace crypto {
+namespace Crypto {
 namespace {
 uint32_t ROTL(uint32_t const &value, unsigned bits) {
   uint32_t mask = (1 << bits) - 1;
   return value << bits | (value >> (32-bits))&mask;
 }
 
-struct f1 : ternary_operator {
+struct f1 : TernaryOperator {
   uint32_t operator()(uint32_t x, uint32_t y, uint32_t z) {
     return (x & y) ^ (~x&z);
   }
 };
 
-struct f2 : ternary_operator {
+struct f2 : TernaryOperator {
   uint32_t operator()(uint32_t x, uint32_t y, uint32_t z) {
     return x ^ y ^ z;
   }
 };
 
-struct f3 : ternary_operator {
+struct f3 : TernaryOperator {
   uint32_t operator()(uint32_t x, uint32_t y, uint32_t z) {
     return (x&y) ^ (x&z) ^ (y&z);
   }
@@ -159,10 +159,6 @@ void Sha1Builder::end() {
   // small hack: add empty string to the updated reminder string
   append("");
   
-}
-
-std::vector<uint32_t> Sha1Builder::value() const {
-  return H;
 }
 
 std::string Sha1Builder::toHexStr(uint32_t n) {

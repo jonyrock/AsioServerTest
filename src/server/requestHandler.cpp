@@ -6,6 +6,7 @@
 #include "request.hpp"
 
 #include <boost/lexical_cast.hpp>
+#include <boost/make_shared.hpp>
 
 #include <fstream>
 #include <iostream>
@@ -47,18 +48,19 @@ void RequestHandler::handleRequestGet(const Request& req, Reply& rep) {
 
 void RequestHandler::handleRequestPostBegin(const Request& req) {
   // prepare for handleRequestPostSome
+  m_sha1BuilderPtr = boost::make_shared<Crypto::Sha1Builder>();
 }
 
 void RequestHandler::handleRequestPostSome(const Request& req) {
-  for(size_t i = 0; i < req.postChunkSize; i++) {
-    std::cout << req.postChunk[i] << std::flush;
-  }
+  std::string str(req.postChunk, req.postChunk + req.postChunkSize);
+  m_sha1BuilderPtr->append(str);
 }
 
 void RequestHandler::handleRequestPostEnd(const Request& req, Reply& rep) {
-  // TODO: return SHA1 result
+  m_sha1BuilderPtr->end();
   rep.status = Reply::Ok;
-  rep.content = "42";
+  rep.content = m_sha1BuilderPtr->toString();
+  m_sha1BuilderPtr.reset();
   rep.headers.resize(2);
   rep.headers[0].name = "Content-Length";
   rep.headers[0].value = boost::lexical_cast<std::string>(
@@ -66,6 +68,7 @@ void RequestHandler::handleRequestPostEnd(const Request& req, Reply& rep) {
   );
   rep.headers[1].name = "Content-Type";
   rep.headers[1].value = "text/plain";
+  
 }
 
 bool RequestHandler::urlDecode(const std::string& in, std::string& out) {

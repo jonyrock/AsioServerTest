@@ -83,6 +83,10 @@ void Connection::handleRead(
       m_buffer.data(),
       m_buffer.data() + bytesTransferred
     );
+    
+//    for(int i = 0; i < bytesTransferred; i++) {
+//      std::cout << m_buffer.data()[i] << std::flush;
+//    }
 
     if (result) {
       pushPostChunk();
